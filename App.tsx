@@ -49,19 +49,16 @@ export default function App() {
 }
 
 function AppContent() {
-  const colorScheme = useColorScheme();
   const user = useSelector<StoreState>(state => state.user);
 
   return !user ? <Auth /> : (
-    <NavigationContainer
-      theme={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+    <NavigationContainer>
       <BottomTabNavigator />
     </NavigationContainer>
   )
 }
 
 function BottomTabNavigator() {
-  const colorScheme = useColorScheme();
   const notifications: Notification[] = useSelector<StoreState, Notification[]>(state => state.notifications as Notification[]);
   const unreadCount = notifications.filter(n => !n.viewed).length;
   const badge = unreadCount ? { tabBarBadge: unreadCount } : {}

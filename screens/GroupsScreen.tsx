@@ -48,7 +48,6 @@ export default function GroupsScreen(
       <DMSans style={commonStyles.title} fontSize={28}>Groups</DMSans>
       <VBuffer height={16} />
       { groups.map(renderGroup) }
-      <FloatingActionButton onPress={() => setShowCreateGroupModal(true)} />
       { showCreateGroupModal && <CreateGroupModal onRequestClose={() => setShowCreateGroupModal(false)} /> }
     </ScrollView>
   )
@@ -61,6 +60,7 @@ export default function GroupsScreen(
     <SafeAreaView>
       { !activeGroup && noActiveGroupRender }
       { activeGroup && activeGroupRender(activeGroup) }
+      { !activeGroup && <FloatingActionButton distance={25} onPress={() => setShowCreateGroupModal(true)} /> }
     </SafeAreaView>
   )
 }

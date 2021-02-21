@@ -120,7 +120,7 @@ const realApi = {
         uri: `/tasks/make`,
         body: { groupId, description, beanReward, completeBy },
         errors: new Map()
-      })
+      }, true)
     },
 
     commit: async function(taskId: string, amount: number): Promise<ApiResponse<Task>> {

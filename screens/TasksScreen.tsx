@@ -72,7 +72,7 @@ export default function TasksScreen(
       { showCreateTaskModal && <CreateTaskModal
         onTaskCreated={(task: Task) => setTasks([task, ...tasks])}
         onRequestClose={() => setShowCreateTaskModal(false)} /> }
-      { !activeTask && <FloatingActionButton distance={40} onPress={() => setShowCreateTaskModal(true)} /> }
+      { !activeTask && <FloatingActionButton distance={25} onPress={() => setShowCreateTaskModal(true)} /> }
     </SafeAreaView>
   )
 }

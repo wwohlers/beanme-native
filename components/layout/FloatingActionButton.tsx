@@ -6,7 +6,7 @@ import Colors from "../../constants/Colors";
 export default function FloatingActionButton(
   { onPress, distance }: { onPress: () => void, distance?: number }
   ) {
-  const extraStyles = distance ? { top: distance, right: distance } : {};
+  const extraStyles = distance ? { top: distance * 2, right: distance } : {};
   return (
     <TouchableWithoutFeedback onPress={onPress}>
       <View style={{ ...styles.button, ...extraStyles }}>
