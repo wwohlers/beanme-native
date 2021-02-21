@@ -8,6 +8,6 @@ export function relativeDate(timestamp: number) {
 }
 
 export function formatPhone(phone: string) {
-  phone = phone.replaceAll('-', '');
+  phone = phone.replace(/-/g, "");
   return phone.substr(0, 3) + '-' + phone.substr(3, 3) + '-' + phone.substr(6, 4);
 }
