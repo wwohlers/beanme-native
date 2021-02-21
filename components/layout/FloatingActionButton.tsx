@@ -1,6 +1,6 @@
 import React from 'react';
 import {TouchableWithoutFeedback, View} from "react-native";
-import {MaterialCommunityIcons} from "@expo/vector-icons";
+import {AntDesign, MaterialCommunityIcons} from "@expo/vector-icons";
 import Colors from "../../constants/Colors";
 
 export default function FloatingActionButton(
@@ -10,7 +10,7 @@ export default function FloatingActionButton(
   return (
     <TouchableWithoutFeedback onPress={onPress}>
       <View style={{ ...styles.button, ...extraStyles }}>
-        <MaterialCommunityIcons name={"plus"} size={24} color={Colors.light.background} />
+        <AntDesign name={"plus"} size={24} color={Colors.light.background} />
       </View>
     </TouchableWithoutFeedback>
   )
@@ -19,13 +19,14 @@ export default function FloatingActionButton(
 const styles = {
   button: {
     backgroundColor: Colors.light.theme,
-    width: 40,
-    height: 40,
-    borderRadius: 20,
+    width: 48,
+    height: 48,
+    borderRadius: 24,
     position: "absolute",
-    top: 0,
-    right: 0,
+    top: 4,
+    right: 4,
     justifyContent: "center",
     alignItems: "center",
+    elevation: 4
   }
 }

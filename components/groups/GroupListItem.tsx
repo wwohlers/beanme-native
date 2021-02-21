@@ -5,6 +5,7 @@ import {commonStyles} from "../../styles/common";
 import {FontAwesome5} from "@expo/vector-icons";
 import Colors from "../../constants/Colors";
 import HBuffer from "../layout/HBuffer";
+import DMSans from "../reusable/fonts/DMSans";
 
 export default function GroupListItem(
   {group, onBackPressed}:
@@ -12,7 +13,7 @@ export default function GroupListItem(
   ) {
   return (
     <View style={commonStyles.tile}>
-      <Text style={styles.tileTitle}>{ group.name }</Text>
+      <DMSans style={styles.tileTitle} fontSize={16}>{ group.name }</DMSans>
       <View style={commonStyles.flexRow}>
         <FontAwesome5 name={"users"} size={12} color={Colors.light.medium} />
         <HBuffer width={2} />
@@ -24,7 +25,6 @@ export default function GroupListItem(
 
 const styles = StyleSheet.create({
   tileTitle: {
-    fontSize: 16,
     marginBottom: 4
   },
 

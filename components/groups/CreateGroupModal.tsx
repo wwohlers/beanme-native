@@ -8,6 +8,8 @@ import {Api} from "../../utils/api";
 import {store} from "../../store";
 import {updateUser} from "../../store/thunks";
 import pushToast from "../../utils/toast";
+import Label from "../reusable/fonts/Label";
+import BeanButton from "../reusable/BeanButton";
 
 export default function CreateGroupModal(
   { onRequestClose } : { onRequestClose: () => void }
@@ -31,10 +33,14 @@ export default function CreateGroupModal(
   return (
     <Modal visible={true} presentationStyle={"pageSheet"} animationType={"slide"}>
       <BackContainer onBackPressed={onRequestClose} title={"Create a Group"}>
-        <Text style={commonStyles.inputLabel}>Amount</Text>
+        <Label>Group Name</Label>
+        <VBuffer height={2} />
         <TextInput style={commonStyles.textInput} onChangeText={setName} />
-        <VBuffer height={8} />
-        <Button title={"Send"} onPress={submit} disabled={loading || !name} color={Colors.light.theme} />
+        <VBuffer height={10} />
+        <BeanButton
+          title={"Send"}
+          onPress={submit}
+          disabled={loading || !name} />
       </BackContainer>
     </Modal>
   )

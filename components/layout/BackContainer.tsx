@@ -3,6 +3,8 @@ import {StyleSheet, Text, TouchableWithoutFeedback, View} from "react-native";
 import {commonStyles} from "../../styles/common";
 import {Ionicons} from "@expo/vector-icons";
 import Colors from "../../constants/Colors";
+import DMSans from "../reusable/fonts/DMSans";
+import HBuffer from "./HBuffer";
 
 export default function BackContainer(
   { onBackPressed, title, children }: { onBackPressed: () => void, title: string, children: React.ReactNode }
@@ -11,9 +13,10 @@ export default function BackContainer(
     <View>
       <View style={styles.titleBar}>
         <TouchableWithoutFeedback onPress={onBackPressed}>
-          <Ionicons name="chevron-back" size={16} />
+          <Ionicons name="arrow-back" size={20} />
         </TouchableWithoutFeedback>
-        <Text>{ title }</Text>
+        <HBuffer width={8} />
+        <DMSans fontSize={18}>{ title }</DMSans>
       </View>
       <View style={commonStyles.container}>
         { children }
@@ -25,7 +28,7 @@ export default function BackContainer(
 const styles = StyleSheet.create({
   titleBar: {
     ...commonStyles.flexRow,
-    paddingVertical: 8,
+    paddingVertical: 14,
     paddingHorizontal: "5%",
     borderColor: Colors.light.borders,
     borderBottomWidth: 1,

@@ -5,7 +5,7 @@ export default {
     background: "#FFF",
     borders: "#DDD",
     theme: "#333",
-    medium: "#888",
+    medium: "#777",
     error: "#FF0000"
   }
 };

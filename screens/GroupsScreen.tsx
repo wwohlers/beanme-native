@@ -13,6 +13,8 @@ import FloatingActionButton from "../components/layout/FloatingActionButton";
 import CreateGroupModal from "../components/groups/CreateGroupModal";
 import { RouteProp } from "@react-navigation/native";
 import {BottomTabParamList} from "../utils/navigation";
+import DMSans from "../components/reusable/fonts/DMSans";
+import VBuffer from "../components/layout/VBuffer";
 
 export default function GroupsScreen(
   { route }:
@@ -43,8 +45,9 @@ export default function GroupsScreen(
   }
 
   const noActiveGroupRender = (
-    <ScrollView style={commonStyles.container}>
-      <Text style={commonStyles.title}>Groups</Text>
+    <ScrollView style={commonStyles.container} contentContainerStyle={{ padding: 8 }}>
+      <DMSans style={commonStyles.title} fontSize={28}>Groups</DMSans>
+      <VBuffer height={16} />
       { groups.map(renderGroup) }
       <FloatingActionButton onPress={() => setShowCreateGroupModal(true)} />
       { showCreateGroupModal && <CreateGroupModal onRequestClose={() => setShowCreateGroupModal(false)} /> }

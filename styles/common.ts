@@ -3,19 +3,12 @@ import Colors from "../constants/Colors";
 
 export const commonStyles = StyleSheet.create({
   container: {
-    paddingHorizontal: "4%",
+    paddingHorizontal: "5%",
     paddingVertical: 12,
   },
 
   title: {
     fontSize: 24,
-    marginVertical: 6
-  },
-
-  label: {
-    fontSize: 13,
-    textTransform: "uppercase",
-    color: Colors.light.medium
   },
 
   inputLabel: {
@@ -27,8 +20,10 @@ export const commonStyles = StyleSheet.create({
   textInput: {
     borderWidth: 1,
     borderColor: Colors.light.borders,
+    fontFamily: "DMSans_400Regular",
     fontSize: 18,
-    padding: 6,
+    paddingVertical: 6,
+    paddingHorizontal: 10,
     color: Colors.light.text
   },
 
@@ -36,7 +31,8 @@ export const commonStyles = StyleSheet.create({
     backgroundColor: Colors.light.background,
     padding: 12,
     borderRadius: 2,
-    marginBottom: 8
+    marginBottom: 8,
+    elevation: 4,
   },
 
   flexRow: {
@@ -49,5 +45,10 @@ export const commonStyles = StyleSheet.create({
     color: Colors.light.error,
     fontSize: 12,
     marginVertical: 4
+  },
+
+  buttonTitle: {
+    fontFamily: "DMSans_400Regular",
+    fontSize: 16
   }
 })

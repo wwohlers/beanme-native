@@ -17,17 +17,19 @@ import TasksScreen from "./screens/TasksScreen";
 import NotificationsScreen from "./screens/NotificationsScreen";
 import {thunkCrons} from "./store/thunks";
 import User from "./utils/models/User";
+import { useFonts, DMSans_400Regular, DMSans_700Bold } from "@expo-google-fonts/dm-sans";
 
 const BottomTab = createBottomTabNavigator<BottomTabParamList>();
 
 export default function App() {
   const isLoadingComplete = useCachedResources();
+  const [fontsLoaded] = useFonts({DMSans_400Regular, DMSans_700Bold})
 
   useEffect(() => {
     thunkCrons();
   }, [])
 
-  if (!isLoadingComplete) {
+  if (!isLoadingComplete || !fontsLoaded) {
     return null;
   } else {
     return (

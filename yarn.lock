@@ -1038,6 +1038,11 @@
   resolved "https://registry.yarnpkg.com/@expo-google-fonts/catamaran/-/catamaran-0.1.0.tgz#b0f569b82c877e9925985b06e17b1701fb388558"
   integrity sha512-mq4SQMY2JIycUR6Z8fefnLuKPf6JBruINAzu8uC50OPq85rZsRfOujLH7sZdBW7qVMSL8L7TvcpL/vwTnzhfoQ==
 
+"@expo-google-fonts/dm-sans@^0.1.0":
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/@expo-google-fonts/dm-sans/-/dm-sans-0.1.0.tgz#51d73331d9e2383e203193d5c09e3399f802e3ba"
+  integrity sha512-zKZeh7Mihld4Mm21eiOs3pgXE3dpiEL57Q7lJXAtok1wLtkbA3SFfr9IhwYL5CXFxje40ikkpKBLEnvGyJ191Q==
+
 "@expo-google-fonts/inter@^0.1.0":
   version "0.1.0"
   resolved "https://registry.yarnpkg.com/@expo-google-fonts/inter/-/inter-0.1.0.tgz#399f068437824fcbf6aa3da5fcf490dba2af85a3"
