@@ -93,6 +93,7 @@ function BottomTabNavigator() {
         component={NotificationsScreen}
         options={{
           tabBarIcon: ({ color }) => <FontAwesome name="bell" color={color} size={20} />,
+          tabBarBadgeStyle: { fontFamily: "DMSans_700Bold", fontSize: 12 },
           ...badge
         }}
       />

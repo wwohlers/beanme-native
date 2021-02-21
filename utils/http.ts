@@ -37,7 +37,11 @@ export default async function<T>(reqInfo: RequestInfo, log: boolean = false): Pr
     try {
       let data = await res.json();
       if (log) console.log(data);
-      if (typeof data === "string") data = JSON.parse(data);
+      try {
+        if (typeof data === "string") data = JSON.parse(data);
+      } catch (e) {
+        data = null;
+      }
       if (log) console.log(data);
       return {
         OK: true,

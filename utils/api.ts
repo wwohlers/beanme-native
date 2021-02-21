@@ -27,7 +27,7 @@ const realApi = {
         uri: `/auth/login`,
         body: { phone, password },
         errors: new Map()
-      }, true)
+      })
     },
 
     getMe: async function(): Promise<ApiResponse<User>> {
@@ -73,7 +73,7 @@ const realApi = {
         uri: `/groups/invite`,
         body: { phone, groupId },
         errors: new Map()
-      })
+      }, true)
     },
 
     acceptInvite: async function(groupId: string): Promise<ApiResponse<Group>> {

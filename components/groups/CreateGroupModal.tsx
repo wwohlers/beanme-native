@@ -38,7 +38,7 @@ export default function CreateGroupModal(
         <TextInput style={commonStyles.textInput} onChangeText={setName} />
         <VBuffer height={10} />
         <BeanButton
-          title={"Send"}
+          title={"Create"}
           onPress={submit}
           disabled={loading || !name} />
       </BackContainer>

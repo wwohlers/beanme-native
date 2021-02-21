@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   RefreshControl,
   ScrollView,
@@ -23,6 +23,7 @@ import Colors from "../constants/Colors";
 import {View} from "../components/Themed";
 import {store} from "../store";
 import {signOut} from "../store/actions";
+import {Api} from "../utils/api";
 
 export default function NotificationsScreen(
   { navigation }:
@@ -40,6 +41,10 @@ export default function NotificationsScreen(
    *  they first opened the screen.
    */
   const [originallyUnviewed, setOriginallyUnviewed] = useState(unviewedNotifications.map(n => n.id));
+
+  useEffect(() => {
+    Api.notifications.markNotificationsRead();
+  }, [])
 
   async function reload() {
     setLoading(true);
