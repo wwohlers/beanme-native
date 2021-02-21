@@ -20,10 +20,10 @@ export default function InviteModal({ onCloseRequest, groupId }: { groupId: stri
     const res = await Api.groups.createInvite(formatPhone(phone), groupId);
     if (res.OK) {
       setLoading(false);
-      onCloseRequest();
     } else {
       pushToast("error", "An error occurred inviting your friend");
     }
+    onCloseRequest();
   }
 
   return (

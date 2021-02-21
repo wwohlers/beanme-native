@@ -71,7 +71,7 @@ export default function NotificationsScreen(
         {
           sortedUnviewedNotifications.map(n => <SingleNotification
             notification={n}
-            navigation={navigation} />)
+            navigation={navigation} key={n.id} />)
         }
         {
           sortedViewedNotifications.map(n => <SingleNotification notification={{

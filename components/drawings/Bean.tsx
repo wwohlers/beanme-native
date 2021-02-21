@@ -7,7 +7,7 @@ export default function Bean({ size, color }: { size: number, color?: string }) 
   const positions = Array.from({ length: size * 2 }, (_, x: number) => x * 0.5);
   const midpoint = size / 2;
   const beanAtX = (x: number) => {
-    const circleDiameter = size - Math.abs((midpoint - x) / 2);
+    let circleDiameter = size - Math.abs((midpoint - x) / 2);
     return (
       <View style={{
         position: "absolute",

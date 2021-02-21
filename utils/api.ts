@@ -46,7 +46,7 @@ const realApi = {
         uri: `/groups/create`,
         body: { name },
         errors: new Map()
-      }, true)
+      })
     },
 
     getGroup: async function(groupId: string): Promise<ApiResponse<Group>> {
@@ -73,7 +73,7 @@ const realApi = {
         uri: `/groups/invite`,
         body: { phone, groupId },
         errors: new Map()
-      }, true)
+      })
     },
 
     acceptInvite: async function(groupId: string): Promise<ApiResponse<Group>> {
@@ -120,7 +120,7 @@ const realApi = {
         uri: `/tasks/make`,
         body: { groupId, description, beanReward, completeBy },
         errors: new Map()
-      }, true)
+      })
     },
 
     commit: async function(taskId: string, amount: number): Promise<ApiResponse<Task>> {
@@ -259,10 +259,10 @@ const mockApi = {
             description: "Test task",
             beanReward: 4,
             completeBy: Date.now() + 60 * 60 * 1000,
-            completed: false,
+            fulfilled: false,
             commitments: [{
               userId: "TEST_USER_ID",
-              amount: 2,
+              amountPaid: 2,
               date: Date.now() - 1000
             }]
           },
@@ -347,7 +347,7 @@ const mockApi = {
           description: "Test Task",
           beanReward: 5,
           completeBy: Date.now() + 60 * 60 * 1000,
-          completed: false,
+          fulfilled: false,
           commitments: []
         }
       }
@@ -364,7 +364,7 @@ const mockApi = {
           description: "Test Task",
           beanReward: 5,
           completeBy: Date.now() + 60 * 60 * 1000,
-          completed: false,
+          fulfilled: false,
           commitments: []
         }
       }
@@ -381,7 +381,7 @@ const mockApi = {
           description: "Test Task",
           beanReward: 5,
           completeBy: Date.now() + 60 * 60 * 1000,
-          completed: false,
+          fulfilled: false,
           commitments: []
         }
       }
@@ -403,7 +403,7 @@ const mockApi = {
             id: "TEST_NOTIFICATION_ID",
             type: NotificationType.INVITE,
             description: "You've been invited",
-            groupRef: "TEST_GROUP_ID",
+            groupId: "TEST_GROUP_ID",
             date: Date.now() - 1000,
             userOwnerId: "TEST_USER_ID",
             viewed: false
@@ -412,7 +412,7 @@ const mockApi = {
             id: "TEST_NOTIFICATION_ID_1",
             type: NotificationType.INCOMING_TRANSFER,
             description: "Incoming transfer",
-            groupRef: "TEST_GROUP_ID",
+            groupId: "TEST_GROUP_ID",
             date: Date.now() - 1000000,
             userOwnerId: "TEST_USER_ID",
             viewed: true
@@ -421,7 +421,7 @@ const mockApi = {
             id: "TEST_NOTIFICATION_ID_2",
             type: NotificationType.OUT_OF_BEANS,
             description: "Out of beans",
-            groupRef: "TEST_GROUP_ID",
+            groupId: "TEST_GROUP_ID",
             date: Date.now() - 10000,
             userOwnerId: "TEST_USER_ID",
             viewed: true
@@ -430,7 +430,7 @@ const mockApi = {
             id: "TEST_NOTIFICATION_ID_3",
             type: NotificationType.TASK_CREATED,
             description: "Task created",
-            taskRef: "TEST_TASK_ID",
+            taskId: "TEST_TASK_ID",
             date: Date.now() - 5000,
             userOwnerId: "TEST_USER_ID",
             viewed: false

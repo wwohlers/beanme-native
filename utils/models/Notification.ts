@@ -5,8 +5,8 @@ export default interface Notification {
   viewed: boolean;
   date: number;
   userOwnerId: string;
-  groupRef?: string;
-  taskRef?: string;
+  groupId?: string;
+  taskId?: string;
   userTopicId?: string;
 }
 

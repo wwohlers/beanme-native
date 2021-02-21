@@ -14,6 +14,7 @@ import {Text} from "react-native";
 import FloatingActionButton from "../components/layout/FloatingActionButton";
 import {BottomTabParamList} from "../utils/navigation";
 import { RouteProp } from "@react-navigation/native";
+import DMSans from "../components/reusable/fonts/DMSans";
 
 export default function TasksScreen(
   { route }:
@@ -39,7 +40,7 @@ export default function TasksScreen(
 
   if (!groups) {
     return (
-      <Text>You haven't joined a group yet!</Text>
+      <DMSans>You haven't joined a group yet!</DMSans>
     )
   }
 

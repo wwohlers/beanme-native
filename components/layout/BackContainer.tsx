@@ -13,10 +13,10 @@ export default function BackContainer(
     <View>
       <View style={styles.titleBar}>
         <TouchableWithoutFeedback onPress={onBackPressed}>
-          <Ionicons name="arrow-back" size={20} />
+          <Ionicons name="arrow-back" size={24} />
         </TouchableWithoutFeedback>
         <HBuffer width={8} />
-        <DMSans fontSize={18}>{ title }</DMSans>
+        <DMSans fontSize={20}>{ title }</DMSans>
       </View>
       <View style={commonStyles.container}>
         { children }

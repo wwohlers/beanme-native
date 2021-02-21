@@ -55,11 +55,16 @@ export default function SingleTask(
 
   const group = groups.find(g => g.id === task.groupId);
   if (!group) return null;
-  const totalCommittedBeans = task.commitments.reduce((sum, c) => sum + c.amount, 0);
+  const totalCommittedBeans = task.commitments.reduce((sum, c) => sum + c.amountPaid, 0);
   const user = group.users.find(u => u.userId === task.assignee);
   const balance = group.users.find(u => u.userId === thisUser.id)?.numBeans || 0;
 
   if (!user) return null;
+
+  const fulfilled = task.fulfilled || totalCommittedBeans >= task.beanReward;
+  const expired = Date.now() > task.completeBy;
+  const isMyTask = thisUser.id === user.userId;
+  const canCommit = !fulfilled && !expired && !isMyTask;
 
   return (
     <BackContainer onBackPressed={onBackPressed} title={task.description}>
@@ -67,7 +72,11 @@ export default function SingleTask(
         contentContainerStyle={{ padding: 8 }}
         refreshControl={<RefreshControl refreshing={loading} onRefresh={loadTask} />}
       >
-        <SingleTaskDeets task={task} totalCommittedBeans={totalCommittedBeans} username={user.name} />
+        <SingleTaskDeets
+          task={task}
+          totalCommittedBeans={totalCommittedBeans}
+          groupName={group.groupName as string}
+          username={user.name} />
         <View style={commonStyles.tile}>
           <View style={commonStyles.flexRow}>
             <DMSans>{ balance }</DMSans>
@@ -76,9 +85,8 @@ export default function SingleTask(
             <DMSans>available</DMSans>
           </View>
         </View>
-        <VBuffer height={16} />
         <CommitList commits={task.commitments} group={group} />
-        {thisUser.id !== user.userId && <FloatingActionButton onPress={() => setShowCommitModal(true)}/>}
+        {canCommit && <FloatingActionButton onPress={() => setShowCommitModal(true)}/>}
         {showCommitModal && <CommitModal
           task={task}
           balance={balance}

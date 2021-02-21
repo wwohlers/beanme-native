@@ -6,12 +6,12 @@ export default interface Task {
   description: string;
   beanReward: number;
   completeBy: number;
-  completed: boolean;
+  fulfilled: boolean;
   commitments: Commitment[];
 }
 
 export interface Commitment {
   userId: string;
-  amount: number;
+  amountPaid: number;
   date: number;
 }

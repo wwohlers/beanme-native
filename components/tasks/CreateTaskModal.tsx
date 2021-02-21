@@ -47,10 +47,10 @@ export default function CreateTaskModal(
         }
         setLoading(false);
         onTaskCreated(res.data);
-        onRequestClose();
       } else {
         pushToast("error", "An error occurred creating your task");
       }
+      onRequestClose();
     }
   }
 
@@ -78,7 +78,7 @@ export default function CreateTaskModal(
 
         <Label>Complete Within</Label>
         <VBuffer height={4} />
-        <RelativeTimePicker onChange={setRelativeDuration} />
+        <RelativeTimePicker onChange={(dur: number) => console.log(dur)} />
         <VBuffer height={16} />
 
         <View style={{...commonStyles.flexRow, justifyContent: "space-between" }}>

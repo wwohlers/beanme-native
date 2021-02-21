@@ -23,10 +23,10 @@ export default function CreateGroupModal(
       const res = await Api.groups.createGroup(name);
       if (res.OK && res.data) {
         updateUser();
-        onRequestClose();
       } else {
         pushToast("error", "An error occurred creating your group");
       }
+      onRequestClose();
     }
   }
 

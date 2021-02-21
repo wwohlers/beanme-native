@@ -17,7 +17,7 @@ export default function RelativeTimePicker(
   const [number, setNumber] = useState(1);
   const [unit, setUnit] = useState("hours" as keyof typeof timeUnits);
 
-  function getRelativeDuration() {
+  function getRelativeDuration(number: number, unit: keyof typeof timeUnits) {
     const unitValue = timeUnits[unit];
     return unitValue * number;
   }
@@ -25,12 +25,12 @@ export default function RelativeTimePicker(
   const numberChanged = (value: string) => {
     const newNumber = parseInt(value);
     if (!isNaN(newNumber)) setNumber(newNumber);
-    onChange(getRelativeDuration());
+    onChange(getRelativeDuration(newNumber, unit));
   }
 
   const unitChanged = (value: keyof typeof timeUnits) => {
     setUnit(value);
-    onChange(getRelativeDuration());
+    onChange(getRelativeDuration(number, value));
   }
 
   return (

@@ -11,6 +11,7 @@ import {store} from "../../store";
 import {patchGroup} from "../../store/actions";
 import Label from "../reusable/fonts/Label";
 import BeanButton from "../reusable/BeanButton";
+import DMSans from "../reusable/fonts/DMSans";
 
 export default function TransferModal(
   { user, balance, groupId, onRequestClose }:
@@ -28,10 +29,10 @@ export default function TransferModal(
       if (res.OK && res.data) {
         setLoading(false);
         store.dispatch(patchGroup(res.data));
-        onRequestClose();
       } else {
         pushToast("error", "An error occurred transferring beans");
       }
+      onRequestClose();
     }
   }
 
@@ -42,7 +43,7 @@ export default function TransferModal(
       setAmount(0);
     }
   }
-  const insufficientBeansText = <Text style={commonStyles.error}>Insufficient beans</Text>
+  const insufficientBeansText = <DMSans style={commonStyles.error}>Insufficient beans</DMSans>
   return (
     <Modal visible={true} animationType={"slide"} presentationStyle={"pageSheet"}>
       <BackContainer onBackPressed={onRequestClose} title={`Send Beans to ${user.name}`}>

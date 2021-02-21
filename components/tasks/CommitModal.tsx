@@ -9,6 +9,7 @@ import VBuffer from "../layout/VBuffer";
 import Colors from "../../constants/Colors";
 import Label from "../reusable/fonts/Label";
 import BeanButton from "../reusable/BeanButton";
+import DMSans from "../reusable/fonts/DMSans";
 
 export default function CommitModal(
   { task, balance, onRequestClose, taskUpdated }:
@@ -26,10 +27,10 @@ export default function CommitModal(
       if (res.OK && res.data) {
         setLoading(false);
         taskUpdated(res.data);
-        onRequestClose();
       } else {
         pushToast("error", "An error occurred committing beans");
       }
+      onRequestClose();
     }
   }
 
@@ -40,7 +41,7 @@ export default function CommitModal(
       setAmount(0);
     }
   }
-  const insufficientBeansText = <Text style={commonStyles.error}>Insufficient beans</Text>
+  const insufficientBeansText = <DMSans style={commonStyles.error}>Insufficient beans</DMSans>
   return (
     <Modal visible={true} animationType={"slide"} presentationStyle={"pageSheet"}>
       <BackContainer onBackPressed={onRequestClose} title={`Commit to ${task.description}`}>

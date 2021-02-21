@@ -17,7 +17,7 @@ export default function SingleNotification(
     { notification: Notification, navigation: BottomTabNavigationProp<BottomTabParamList> }
 ) {
   const acceptInvite = async (n: Notification) => {
-    const groupId = n.groupRef;
+    const groupId = n.groupId;
     if (groupId) {
       const res = await Api.groups.acceptInvite(groupId);
       if (res.OK && res.data) {
@@ -31,8 +31,8 @@ export default function SingleNotification(
     }
   }
 
-  const navigateTask = (n: Notification) => navigation.navigate("Tasks", {taskId: n.taskRef});
-  const navigateGroup = (n: Notification) => navigation.navigate("Groups", { groupId: n.groupRef });
+  const navigateTask = (n: Notification) => navigation.navigate("Tasks", {taskId: n.taskId});
+  const navigateGroup = (n: Notification) => navigation.navigate("Groups", { groupId: n.groupId });
 
   const handlerMap = new Map<NotificationType, (n: Notification) => void>([
     [NotificationType.INVITE, acceptInvite],

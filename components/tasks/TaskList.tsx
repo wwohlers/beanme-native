@@ -29,7 +29,7 @@ export default function TaskList(
   const renderTask = (task: Task, i: number) => {
     const group = groups.find(g => g.id === task.groupId);
     if (!group) return null;
-    const totalCommittedBeans = task.commitments.reduce((sum, c) => sum + c.amount, 0);
+    const totalCommittedBeans = task.commitments.reduce((sum, c) => sum + c.amountPaid, 0);
     const user = group.users.find(u => u.userId === task.assignee);
     return (
       <TouchableWithoutFeedback onPress={() => onTaskSelected(task)} key={i}>
@@ -42,6 +42,15 @@ export default function TaskList(
               <HBuffer width={8} />
             </View>
             <DMSans fontSize={14} style={styles.mediumText}>{ user ? user.name : 'No one' }</DMSans>
+          </View>
+          <VBuffer height={2} />
+          <View style={commonStyles.flexRow}>
+            <View style={{ width: 24 }}>
+              <FontAwesome5 name={"users"} size={12} color={Colors.light.medium} />
+              <HBuffer width={8} />
+            </View>
+            <DMSans fontSize={14} style={styles.mediumText}>{ group ? group.groupName : "No" +
+              " group" }</DMSans>
           </View>
           <VBuffer height={2} />
           <View style={commonStyles.flexRow}>
@@ -67,6 +76,10 @@ export default function TaskList(
   const emptyRender = (
     <Label>No tasks yet</Label>
   )
+  const filteredSortedTasks = tasks
+    .filter(t => Date.now() < t.completeBy)
+    .sort((a, b) => a.completeBy - b .completeBy);
+
   return (
     <ScrollView
       contentContainerStyle={{ padding: 8 }}
@@ -74,7 +87,7 @@ export default function TaskList(
       refreshControl={<RefreshControl refreshing={isRefreshing} onRefresh={onRefresh} />}>
       <DMSans fontSize={28}>Tasks</DMSans>
       <VBuffer height={16} />
-      { tasks.length === 0 ? emptyRender : tasks.map(renderTask) }
+      { tasks.length === 0 ? emptyRender : filteredSortedTasks.map(renderTask) }
     </ScrollView>
   )
 }
