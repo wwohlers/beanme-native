@@ -3,7 +3,7 @@ import Colors from "../constants/Colors";
 
 export const commonStyles = StyleSheet.create({
   container: {
-    paddingHorizontal: "5%",
+    paddingHorizontal: "4%",
     paddingVertical: 12,
   },
 
@@ -31,7 +31,7 @@ export const commonStyles = StyleSheet.create({
     backgroundColor: Colors.light.background,
     padding: 12,
     borderRadius: 2,
-    marginBottom: 8,
+    marginBottom: 16,
     elevation: 4,
   },
 

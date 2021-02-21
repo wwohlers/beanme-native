@@ -1,5 +1,4 @@
 import React from 'react';
-import {Notification, NotificationType} from "../../utils/models/User";
 import {Text, TouchableWithoutFeedback, View} from "react-native";
 import {commonStyles} from "../../styles/common";
 import {relativeDate} from "../../utils/format";
@@ -8,6 +7,10 @@ import {BottomTabParamList} from "../../utils/navigation";
 import {Api} from "../../utils/api";
 import {updateUser} from "../../store/thunks";
 import pushToast from "../../utils/toast";
+import Notification, {NotificationType} from "../../utils/models/Notification";
+import DMSans from "../reusable/fonts/DMSans";
+import Label from "../reusable/fonts/Label";
+import HBuffer from "../layout/HBuffer";
 
 export default function SingleNotification(
   { notification, navigation }:
@@ -40,15 +43,16 @@ export default function SingleNotification(
     [NotificationType.USER_JOINED, navigateGroup]
   ])
 
-  const style = !notification.viewed ? { fontWeight: "bold" as "bold" } : {};
+  const fontWeight = !notification.viewed ? 700 : 400;
   const handler = handlerMap.get(notification.type);
   return (
     <TouchableWithoutFeedback onPress={() => handler ? handler(notification) : null }>
       <View style={commonStyles.tile}>
-        <Text style={style}>
+        <DMSans fontWeight={fontWeight} fontSize={16}>
           { notification.description }
-          <Text style={commonStyles.label}> { relativeDate(notification.date) }</Text>
-        </Text>
+          <HBuffer width={10} />
+          <Label>{ relativeDate(notification.date) }</Label>
+        </DMSans>
       </View>
     </TouchableWithoutFeedback>
   )

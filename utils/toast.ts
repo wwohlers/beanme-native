@@ -1,4 +1,8 @@
+import Toast from 'react-native-toast-message';
+
 export default function pushToast(type: "success" | "error", message: string) {
-  // Do nothing for now
-  console.log(message);
+  Toast.show({
+    type,
+    text1: message
+  })
 }

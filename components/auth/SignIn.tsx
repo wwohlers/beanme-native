@@ -7,18 +7,24 @@ import {Api} from "../../utils/api";
 import {store} from "../../store";
 import {setToken, setUser} from "../../store/actions";
 import pushToast from "../../utils/toast";
-import {loadGroups} from "../../store/thunks";
+import {loadGroups, updateUser} from "../../store/thunks";
+import DMSans from "../reusable/fonts/DMSans";
+import Label from "../reusable/fonts/Label";
+import BeanButton from "../reusable/BeanButton";
+import {formatPhone} from "../../utils/format";
 
 export default function SignIn() {
   const [phone, setPhone] = useState('');
   const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
 
   async function signIn() {
-    const res = await Api.users.signIn(phone, password);
+    setLoading(true);
+    const res = await Api.users.signIn(formatPhone(phone), password);
+    setLoading(false);
     if (res.OK && res.data) {
-      store.dispatch(setUser(res.data));
-      store.dispatch(setToken(res.data.token));
-      await loadGroups();
+      store.dispatch(setToken(res.data.access_token));
+      await updateUser();
     } else {
       pushToast("error", "Error signing in");
     }
@@ -26,15 +32,24 @@ export default function SignIn() {
 
   return (
     <View>
-      <Text style={commonStyles.title}>Sign In</Text>
-      <VBuffer height={8} />
-      <Text style={commonStyles.inputLabel}>Phone</Text>
+      <DMSans fontSize={28}>Sign in</DMSans>
+
+      <VBuffer height={16} />
+      <Label>Phone</Label>
+      <VBuffer height={4} />
       <TextInput style={commonStyles.textInput} onChangeText={setPhone} />
-      <VBuffer height={8} />
-      <Text style={commonStyles.inputLabel}>Password</Text>
+
+      <VBuffer height={16} />
+      <Label>Password</Label>
+      <VBuffer height={4} />
       <TextInput style={commonStyles.textInput} onChangeText={setPassword} secureTextEntry={true} />
-      <VBuffer height={8} />
-      <Button title={"Sign In"} onPress={signIn} color={Colors.light.theme} />
+
+      <VBuffer height={16} />
+      <BeanButton
+        title={"Sign In"}
+        onPress={signIn}
+        disabled={!phone || !password}
+        loading={loading} />
     </View>
   )
 }

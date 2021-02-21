@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import Task from "../../utils/models/Task";
-import {RefreshControl, ScrollView, StyleSheet, Text, View} from "react-native";
+import {ActivityIndicator, RefreshControl, ScrollView, StyleSheet, Text, View} from "react-native";
 import BackContainer from "../layout/BackContainer";
 import {commonStyles} from "../../styles/common";
 import Bean from "../drawings/Bean";
@@ -19,6 +19,7 @@ import User from "../../utils/models/User";
 import {Api} from "../../utils/api";
 import pushToast from "../../utils/toast";
 import SingleTaskDeets from "./SingleTaskDeets";
+import DMSans from "../reusable/fonts/DMSans";
 
 export default function SingleTask(
   { taskId, onBackPressed }:
@@ -46,27 +47,39 @@ export default function SingleTask(
     }
   }
 
-  if (!task) return null;
+  if (!task) return (
+    <BackContainer onBackPressed={() => {}} title={"Loading..."}>
+      <ActivityIndicator color={Colors.light.bean} />
+    </BackContainer>
+  );
 
-  const group = groups.find(g => g._id === task.groupId);
+  const group = groups.find(g => g.id === task.groupId);
   if (!group) return null;
   const totalCommittedBeans = task.commitments.reduce((sum, c) => sum + c.amount, 0);
   const user = group.users.find(u => u.userId === task.assignee);
-  const balance = group.users.find(u => u.userId === thisUser._id)?.beans || 0;
+  const balance = group.users.find(u => u.userId === thisUser.id)?.numBeans || 0;
 
   if (!user) return null;
 
   return (
     <BackContainer onBackPressed={onBackPressed} title={task.description}>
       <ScrollView
-        style={commonStyles.container}
+        contentContainerStyle={{ padding: 8 }}
         refreshControl={<RefreshControl refreshing={loading} onRefresh={loadTask} />}
       >
         <SingleTaskDeets task={task} totalCommittedBeans={totalCommittedBeans} username={user.name} />
+        <View style={commonStyles.tile}>
+          <View style={commonStyles.flexRow}>
+            <DMSans>{ balance }</DMSans>
+            <HBuffer width={6} />
+            <Bean size={12} />
+            <DMSans>available</DMSans>
+          </View>
+        </View>
         <VBuffer height={16} />
         <CommitList commits={task.commitments} group={group} />
-        <FloatingActionButton onPress={() => setShowCommitModal(true)} />
-        { showCommitModal && <CommitModal
+        {thisUser.id !== user.userId && <FloatingActionButton onPress={() => setShowCommitModal(true)}/>}
+        {showCommitModal && <CommitModal
           task={task}
           balance={balance}
           onRequestClose={() => setShowCommitModal(false)}

@@ -1,5 +1,5 @@
 export default interface Task {
-  _id: string;
+  id: string;
   groupId: string;
   creator: string;
   assignee: string;

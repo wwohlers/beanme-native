@@ -6,6 +6,8 @@ import {FontAwesome5} from "@expo/vector-icons";
 import Colors from "../../constants/Colors";
 import HBuffer from "../layout/HBuffer";
 import DMSans from "../reusable/fonts/DMSans";
+import Label from "../reusable/fonts/Label";
+import VBuffer from "../layout/VBuffer";
 
 export default function GroupListItem(
   {group, onBackPressed}:
@@ -13,11 +15,12 @@ export default function GroupListItem(
   ) {
   return (
     <View style={commonStyles.tile}>
-      <DMSans style={styles.tileTitle} fontSize={16}>{ group.name }</DMSans>
+      <DMSans style={styles.tileTitle} fontSize={18}>{ group.groupName }</DMSans>
+      <VBuffer height={8} />
       <View style={commonStyles.flexRow}>
         <FontAwesome5 name={"users"} size={12} color={Colors.light.medium} />
-        <HBuffer width={2} />
-        <Text style={styles.userCountLabel}>{ group.users.length }</Text>
+        <HBuffer width={4} />
+        <Label>{ group.users.length }</Label>
       </View>
     </View>
   )

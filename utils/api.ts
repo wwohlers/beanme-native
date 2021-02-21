@@ -1,32 +1,39 @@
-import User, {NotificationType} from "./models/User";
+import User from "./models/User";
 import http, {ApiResponse} from "./http";
 import Group, {PopulatedGroup} from "./models/Group";
 import Task from "./models/Task";
+import Notification, {NotificationType} from "./models/Notification";
+
+interface AuthResponse {
+  user: User;
+  access_token: string;
+  refresh_token: string;
+}
 
 const realApi = {
   users: {
-    signUp: async function(name: string, phone: string, password: string): Promise<ApiResponse<User>> {
+    signUp: async function(name: string, phone: string, password: string): Promise<ApiResponse<AuthResponse>> {
       return http({
         method: "POST",
-        uri: `/users/signup`,
+        uri: `/auth/signup`,
         body: { name, phone, password },
         errors: new Map()
       })
     },
 
-    signIn: async function(phone: string, password: string): Promise<ApiResponse<User>> {
+    signIn: async function(phone: string, password: string): Promise<ApiResponse<AuthResponse>> {
       return http({
         method: "POST",
-        uri: `/users/signin`,
+        uri: `/auth/login`,
         body: { phone, password },
         errors: new Map()
-      })
+      }, true)
     },
 
     getMe: async function(): Promise<ApiResponse<User>> {
       return http({
         method: "GET",
-        uri: `/users`,
+        uri: `/user`,
         errors: new Map()
       })
     }
@@ -39,21 +46,23 @@ const realApi = {
         uri: `/groups/create`,
         body: { name },
         errors: new Map()
-      })
+      }, true)
     },
 
-    getGroup: async function(id: string): Promise<ApiResponse<Group>> {
+    getGroup: async function(groupId: string): Promise<ApiResponse<Group>> {
       return http({
-        method: "GET",
-        uri: `/groups/${id}`,
+        method: "POST",
+        uri: `/groups`,
+        body: { groupId },
         errors: new Map()
       })
     },
 
     getTasksByGroup: async function(groupId: string): Promise<ApiResponse<Task[]>> {
       return http({
-        method: "GET",
-        uri: `/groups/${groupId}/tasks`,
+        method: "POST",
+        uri: `/groups/tasks`,
+        body: { groupId },
         errors: new Map()
       })
     },
@@ -98,8 +107,9 @@ const realApi = {
   tasks: {
     getTaskById: async function(taskId: string): Promise<ApiResponse<Task>> {
       return http({
-        method: "GET",
-        uri: `/tasks/${taskId}`,
+        method: "POST",
+        uri: `/tasks`,
+        body: { taskId },
         errors: new Map()
       })
     },
@@ -125,7 +135,26 @@ const realApi = {
     deleteTask: async function(taskId: string): Promise<ApiResponse<void>> {
       return http({
         method: "DELETE",
-        uri: `/tasks/${taskId}`,
+        uri: `/tasks`,
+        body: { taskId },
+        errors: new Map<number, string>()
+      })
+    }
+  },
+
+  notifications: {
+    getNotifications(): Promise<ApiResponse<Notification[]>> {
+      return http({
+        method: "GET",
+        uri: `/notifications`,
+        errors: new Map<number, string>()
+      })
+    },
+
+    markNotificationsRead(): Promise<ApiResponse<void>> {
+      return http({
+        method: "POST",
+        uri: `/notifications`,
         errors: new Map<number, string>()
       })
     }
@@ -144,7 +173,6 @@ const mockApi = {
           password: "as;ldfjas;hger;gjh",
           token: "ABCDEF",
           groups: ["TEST_GROUP_ID"],
-          notifications: []
         }
       }
     },
@@ -159,7 +187,6 @@ const mockApi = {
           password: "as;ldfjas;hger;gjh",
           token: "ABCDEF",
           groups: ["TEST_GROUP_ID"],
-          notifications: []
         }
       }
     },
@@ -174,40 +201,6 @@ const mockApi = {
           password: "as;ldfjas;hger;gjh",
           token: "ABCDEF",
           groups: ["TEST_GROUP_ID"],
-          notifications: [
-            {
-              _id: "TEST_NOTIFICATION_ID",
-              type: NotificationType.INVITE,
-              description: "You've been invited",
-              groupRef: "TEST_GROUP_ID",
-              date: Date.now() - 1000,
-              viewed: false
-            },
-            {
-              _id: "TEST_NOTIFICATION_ID_1",
-              type: NotificationType.INCOMING_TRANSFER,
-              description: "Incoming transfer",
-              groupRef: "TEST_GROUP_ID",
-              date: Date.now() - 1000000,
-              viewed: true
-            },
-            {
-              _id: "TEST_NOTIFICATION_ID_2",
-              type: NotificationType.OUT_OF_BEANS,
-              description: "Out of beans",
-              groupRef: "TEST_GROUP_ID",
-              date: Date.now() - 10000,
-              viewed: true
-            },
-            {
-              _id: "TEST_NOTIFICATION_ID_3",
-              type: NotificationType.TASK_CREATED,
-              description: "Task created",
-              taskRef: "TEST_TASK_ID",
-              date: Date.now() - 5000,
-              viewed: false
-            }
-          ]
         }
       }
     }
@@ -218,11 +211,11 @@ const mockApi = {
       return {
         OK: true,
         data: {
-          _id: "TEST_GROUP_ID",
-          name: "Test Group",
+          id: "TEST_GROUP_ID",
+          groupName: "Test Group",
           users: [{
             userId: "TEST_USER_ID",
-            beans: 8
+            numBeans: 8
           }],
           scheduledTasks: [],
           invites: []
@@ -234,17 +227,17 @@ const mockApi = {
       return {
         OK: true,
         data: {
-          _id: "TEST_GROUP_ID",
-          name: "Test Group",
+          id: "TEST_GROUP_ID",
+          groupName: "Test Group",
           users: [
             {
               userId: "TEST_USER_ID",
-              beans: 8,
+              numBeans: 8,
               name: "User 1",
             },
             {
               userId: "TEST_USER_ID_2",
-              beans: 10,
+              numBeans: 10,
               name: "User 2"
             }
           ],
@@ -259,7 +252,7 @@ const mockApi = {
         OK: true,
         data: [
           {
-            _id: "TEST_TASK_ID",
+            id: "TEST_TASK_ID",
             groupId: "TEST_GROUP_ID",
             creator: "TEST_USER_ID",
             assignee: "TEST_USER_ID",
@@ -273,29 +266,6 @@ const mockApi = {
               date: Date.now() - 1000
             }]
           },
-          {
-            _id: "TEST_TASK_ID_2",
-            groupId: "TEST_GROUP_ID",
-            creator: "TEST_USER_ID",
-            assignee: "TEST_USER_ID",
-            description: "Test task 2",
-            beanReward: 7,
-            completeBy: Date.now() + 24 * 60 * 60 * 1000,
-            completed: false,
-            commitments: []
-          },
-          {
-            _id: "TEST_TASK_ID_2",
-            groupId: "TEST_GROUP_ID",
-            creator: "TEST_USER_ID",
-            assignee: "TEST_USER_ID",
-            description: "Test task 3",
-            beanReward: 10,
-            completeBy: Date.now() + 48 * 60 * 60 * 1000,
-            completed: false,
-            commitments: []
-          }
-
         ]
       }
     },
@@ -304,11 +274,11 @@ const mockApi = {
       return {
         OK: true,
         data: {
-          _id: "TEST_GROUP_ID",
-          name: "Test Group",
+          id: "TEST_GROUP_ID",
+          groupName: "Test Group",
           users: [{
             userId: "TEST_USER_ID",
-            beans: 8
+            numBeans: 8
           }],
           scheduledTasks: [],
           invites: []
@@ -320,11 +290,11 @@ const mockApi = {
       return {
         OK: true,
         data: {
-          _id: "TEST_GROUP_ID",
-          name: "Test Group",
+          id: "TEST_GROUP_ID",
+          groupName: "Test Group",
           users: [{
             userId: "TEST_USER_ID",
-            beans: 8
+            numBeans: 8
           }],
           scheduledTasks: [],
           invites: []
@@ -336,11 +306,11 @@ const mockApi = {
       return {
         OK: true,
         data: {
-          _id: "TEST_GROUP_ID",
-          name: "Test Group",
+          id: "TEST_GROUP_ID",
+          groupName: "Test Group",
           users: [{
             userId: "TEST_USER_ID",
-            beans: 8
+            numBeans: 8
           }],
           scheduledTasks: [],
           invites: []
@@ -352,11 +322,11 @@ const mockApi = {
       return {
         OK: true,
         data: {
-          _id: "TEST_GROUP_ID",
-          name: "Test Group",
+          id: "TEST_GROUP_ID",
+          groupName: "Test Group",
           users: [{
             userId: "TEST_USER_ID",
-            beans: 8
+            numBeans: 8
           }],
           scheduledTasks: [],
           invites: []
@@ -370,7 +340,7 @@ const mockApi = {
       return {
         OK: true,
         data: {
-          _id: "TEST_TASK_ID",
+          id: "TEST_TASK_ID",
           groupId: "TEST_GROUP_ID",
           creator: "TEST_USER_ID",
           assignee: "TEST_USER_ID",
@@ -387,7 +357,7 @@ const mockApi = {
       return {
         OK: true,
         data: {
-          _id: "TEST_TASK_ID",
+          id: "TEST_TASK_ID",
           groupId: "TEST_GROUP_ID",
           creator: "TEST_USER_ID",
           assignee: "TEST_USER_ID",
@@ -404,7 +374,7 @@ const mockApi = {
       return {
         OK: true,
         data: {
-          _id: "TEST_TASK_ID",
+          id: "TEST_TASK_ID",
           groupId: "TEST_GROUP_ID",
           creator: "TEST_USER_ID",
           assignee: "TEST_USER_ID",
@@ -422,7 +392,53 @@ const mockApi = {
         OK: true,
       }
     }
+  },
+
+  notifications: {
+    getNotifications: async function(): Promise<ApiResponse<Notification[]>> {
+      return {
+        OK: true,
+        data: [
+          {
+            id: "TEST_NOTIFICATION_ID",
+            type: NotificationType.INVITE,
+            description: "You've been invited",
+            groupRef: "TEST_GROUP_ID",
+            date: Date.now() - 1000,
+            userOwnerId: "TEST_USER_ID",
+            viewed: false
+          },
+          {
+            id: "TEST_NOTIFICATION_ID_1",
+            type: NotificationType.INCOMING_TRANSFER,
+            description: "Incoming transfer",
+            groupRef: "TEST_GROUP_ID",
+            date: Date.now() - 1000000,
+            userOwnerId: "TEST_USER_ID",
+            viewed: true
+          },
+          {
+            id: "TEST_NOTIFICATION_ID_2",
+            type: NotificationType.OUT_OF_BEANS,
+            description: "Out of beans",
+            groupRef: "TEST_GROUP_ID",
+            date: Date.now() - 10000,
+            userOwnerId: "TEST_USER_ID",
+            viewed: true
+          },
+          {
+            id: "TEST_NOTIFICATION_ID_3",
+            type: NotificationType.TASK_CREATED,
+            description: "Task created",
+            taskRef: "TEST_TASK_ID",
+            date: Date.now() - 5000,
+            userOwnerId: "TEST_USER_ID",
+            viewed: false
+          }
+        ]
+      }
+    }
   }
 }
 
-export const Api = mockApi;
+export const Api = realApi;

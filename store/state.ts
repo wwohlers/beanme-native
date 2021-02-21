@@ -1,16 +1,19 @@
 import User from "../utils/models/User";
 import Group, {PopulatedGroup} from "../utils/models/Group";
 import Task from "../utils/models/Task";
+import Notification from "../utils/models/Notification";
 
 export interface StoreState {
   user: User | null;
   token: string | null;
+  notifications: Notification[];
   groups: PopulatedGroup[];
 }
 
 const initialState = {
   user: null,
   token: null,
+  notifications: [],
   groups: []
 }
 
@@ -23,10 +26,16 @@ const actionMap: {[key: string]: (state: StoreState, payload: any) => Partial<St
     return { token }
   },
 
+  setNotifications: (state: StoreState, notifications: Notification[]) => {
+    return { notifications }
+  },
+
   signOut: (state: StoreState) => {
     return {
       user: null,
-      token: null
+      token: null,
+      groups: [],
+      notifications: []
     }
   },
 
@@ -39,11 +48,11 @@ const actionMap: {[key: string]: (state: StoreState, payload: any) => Partial<St
   },
 
   patchGroup: (state: StoreState, group: Group) => {
-    const existingGroup = state.groups.find(g => g._id === group._id);
+    const existingGroup = state.groups.find(g => g.id === group.id);
     if (existingGroup) {
       return {
         groups: state.groups.map(g => {
-          if (g._id === group._id) return updateKeepPopulated(group, existingGroup);
+          if (g.id === group.id) return updateKeepPopulated(group, existingGroup);
           else return g;
         })
       }
@@ -59,7 +68,7 @@ function updateKeepPopulated(group: Group, populatedGroup: PopulatedGroup): Popu
       .map(u => {
         return {
           userId: u.userId,
-          beans: u.beans,
+          numBeans: u.numBeans,
           name: populatedGroup.users.find(_u => _u.userId === u.userId)?.name as string
         }
       })

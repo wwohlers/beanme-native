@@ -1,6 +1,6 @@
 import {PopulatedGroup} from "../utils/models/Group";
 import {Api} from "../utils/api";
-import {setGroups, setUser, signOut} from "./actions";
+import {setGroups, setNotifications, setUser, signOut} from "./actions";
 import {store} from "./index";
 import pushToast from "../utils/toast";
 
@@ -11,15 +11,23 @@ export async function thunkCrons() {
 }
 
 export async function updateUser() {
-  const user = store.getState().user;
-  if (user) {
+  const token = store.getState().token;
+  if (token) {
     const res = await Api.users.getMe();
     if (res.OK && res.data) {
       store.dispatch(setUser(res.data));
       await loadGroups();
-    } else {
-      pushToast("error", "Please sign in again");
-      store.dispatch(signOut());
+      await getNotifications();
+    }
+  }
+}
+
+export async function getNotifications() {
+  const user = store.getState().user;
+  if (user) {
+    const res = await Api.notifications.getNotifications();
+    if (res.OK && res.data) {
+      store.dispatch(setNotifications(res.data));
     }
   }
 }

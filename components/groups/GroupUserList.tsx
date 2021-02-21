@@ -10,12 +10,12 @@ import InviteModal from "./InviteModal";
 export default function GroupUserList({ group }: { group: PopulatedGroup }) {
   const [showInviteModal, setShowInviteModal] = useState(false);
 
-  const sortedUsers = group.users.sort((a, b) => b.beans - a.beans);
+  const sortedUsers = group.users.sort((a, b) => b.numBeans - a.numBeans);
   return (
     <ScrollView>
       { sortedUsers.map((user, i) => <GroupUser user={user} group={group} key={i} />) }
       <FloatingActionButton onPress={() => setShowInviteModal(true)} />
-      { showInviteModal && <InviteModal groupId={group._id} onCloseRequest={() => setShowInviteModal(false)} /> }
+      { showInviteModal && <InviteModal groupId={group.id} onCloseRequest={() => setShowInviteModal(false)} /> }
     </ScrollView>
   )
 }

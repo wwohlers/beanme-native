@@ -31,9 +31,8 @@ export default function TasksScreen(
   }, [])
 
   useEffect(() => {
-    console.log(route.params);
     if (route.params && route.params.taskId && !isRefreshing) {
-      const task = tasks.find(g => g._id === route.params.taskId);
+      const task = tasks.find(g => g.id === route.params.taskId);
       if (task) setActiveTask(task);
     }
   }, [route, isRefreshing])
@@ -67,11 +66,13 @@ export default function TasksScreen(
         onTaskSelected={setActiveTask}
         isRefreshing={isRefreshing}
         onRefresh={loadTasks} /> }
-      { activeTask && <SingleTask taskId={activeTask._id} onBackPressed={() => setActiveTask(null)} /> }
+      { activeTask && <SingleTask
+        taskId={activeTask.id}
+        onBackPressed={() => setActiveTask(null)} /> }
       { showCreateTaskModal && <CreateTaskModal
         onTaskCreated={(task: Task) => setTasks([task, ...tasks])}
         onRequestClose={() => setShowCreateTaskModal(false)} /> }
-      <FloatingActionButton distance={40} onPress={() => setShowCreateTaskModal(true)} />
+      { !activeTask && <FloatingActionButton distance={40} onPress={() => setShowCreateTaskModal(true)} /> }
     </SafeAreaView>
   )
 }

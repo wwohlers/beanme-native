@@ -18,6 +18,9 @@ import NotificationsScreen from "./screens/NotificationsScreen";
 import {thunkCrons} from "./store/thunks";
 import User from "./utils/models/User";
 import { useFonts, DMSans_400Regular, DMSans_700Bold } from "@expo-google-fonts/dm-sans";
+import Notification from "./utils/models/Notification";
+import Toast from 'react-native-toast-message';
+import {toastConfig} from "./utils/toast-config";
 
 const BottomTab = createBottomTabNavigator<BottomTabParamList>();
 
@@ -37,6 +40,7 @@ export default function App() {
         <PersistGate loading={null} persistor={persistor}>
           <SafeAreaProvider>
             <AppContent />
+            <Toast ref={(ref) => Toast.setRef(ref)} config={toastConfig} />
           </SafeAreaProvider>
         </PersistGate>
       </Provider>
@@ -58,8 +62,9 @@ function AppContent() {
 
 function BottomTabNavigator() {
   const colorScheme = useColorScheme();
-  const user: User = useSelector<StoreState, User>(state => state.user as User);
-  const unreadCount = user.notifications.filter(n => !n.viewed).length;
+  const notifications: Notification[] = useSelector<StoreState, Notification[]>(state => state.notifications as Notification[]);
+  const unreadCount = notifications.filter(n => !n.viewed).length;
+  const badge = unreadCount ? { tabBarBadge: unreadCount } : {}
 
   return (
     <BottomTab.Navigator
@@ -88,7 +93,7 @@ function BottomTabNavigator() {
         component={NotificationsScreen}
         options={{
           tabBarIcon: ({ color }) => <FontAwesome name="bell" color={color} size={20} />,
-          tabBarBadge: unreadCount
+          ...badge
         }}
       />
     </BottomTab.Navigator>

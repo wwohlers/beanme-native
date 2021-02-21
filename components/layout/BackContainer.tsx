@@ -32,5 +32,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: "5%",
     borderColor: Colors.light.borders,
     borderBottomWidth: 1,
+    backgroundColor: "#FFF"
   }
 })

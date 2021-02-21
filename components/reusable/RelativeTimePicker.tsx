@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
 import {Picker, TextInput, View} from "react-native";
 import {commonStyles} from "../../styles/common";
+import Colors from "../../constants/Colors";
 
 export default function RelativeTimePicker(
   { onChange }:
@@ -34,12 +35,20 @@ export default function RelativeTimePicker(
 
   return (
     <View style={commonStyles.flexRow}>
-      <TextInput style={{ ...commonStyles.textInput, flex: 1 }} keyboardType={"numeric"} onChangeText={numberChanged} />
-      <Picker style={{ ...commonStyles.textInput, flex: 1 }} selectedValue={unit} onValueChange={unitChanged}>
-        {
-          Object.keys(timeUnits).map(unit => <Picker.Item label={unit} value={unit} key={unit} />)
-        }
-      </Picker>
+      <TextInput
+        style={{ ...commonStyles.textInput, flex: 1 }}
+        keyboardType={"numeric"}
+        placeholder={"1"}
+        onChangeText={numberChanged} />
+      <View style={{ borderWidth: 1, borderColor: Colors.light.borders, flex: 1, borderLeftWidth: 0 }}>
+        <Picker
+          itemStyle={{ fontFamily: 'DMSans_400Regular', color: Colors.light.theme }}
+          style={{ ...commonStyles.textInput, flex: 1 }} selectedValue={unit} onValueChange={unitChanged}>
+          {
+            Object.keys(timeUnits).map(unit => <Picker.Item label={unit} value={unit} key={unit} />)
+          }
+        </Picker>
+      </View>
     </View>
   )
 }

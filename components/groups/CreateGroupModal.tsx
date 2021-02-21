@@ -25,7 +25,7 @@ export default function CreateGroupModal(
         updateUser();
         onRequestClose();
       } else {
-        pushToast("success", "An error occurred creating your group");
+        pushToast("error", "An error occurred creating your group");
       }
     }
   }

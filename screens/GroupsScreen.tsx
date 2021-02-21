@@ -20,14 +20,13 @@ export default function GroupsScreen(
   { route }:
     { route: RouteProp<BottomTabParamList, 'Groups'> }
 ) {
-  const user: User = useSelector<StoreState, User>(state => state.user as User);
   const groups: PopulatedGroup[] = useSelector<StoreState, PopulatedGroup[]>(state => state.groups);
   const [activeGroup, setActiveGroup] = useState(null as PopulatedGroup | null);
   const [showCreateGroupModal, setShowCreateGroupModal] = useState(false);
 
   useEffect(() => {
     if (route.params && route.params.groupId) {
-      const group = groups.find(g => g._id === route.params.groupId);
+      const group = groups.find(g => g.id === route.params.groupId);
       if (group) setActiveGroup(group);
     }
   }, [route])
@@ -54,7 +53,7 @@ export default function GroupsScreen(
     </ScrollView>
   )
   const activeGroupRender = (group: PopulatedGroup) => (
-    <BackContainer onBackPressed={() => setActiveGroup(null)} title={group.name}>
+    <BackContainer onBackPressed={() => setActiveGroup(null)} title={group.groupName}>
       <GroupUserList group={group} />
     </BackContainer>
   )

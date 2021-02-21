@@ -3,9 +3,12 @@ export default {
   light: {
     text: "#000",
     background: "#FFF",
-    borders: "#DDD",
-    theme: "#333",
+    darkBackground: "#F8F8F8",
+    borders: "#CFCFCF",
+    theme: "#a8432f",
     medium: "#777",
-    error: "#FF0000"
+    error: "#be0000",
+    success: "#00830f",
+    bean: "#a8432f"
   }
 };

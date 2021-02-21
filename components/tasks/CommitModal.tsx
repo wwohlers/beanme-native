@@ -7,6 +7,8 @@ import {commonStyles} from "../../styles/common";
 import BackContainer from "../layout/BackContainer";
 import VBuffer from "../layout/VBuffer";
 import Colors from "../../constants/Colors";
+import Label from "../reusable/fonts/Label";
+import BeanButton from "../reusable/BeanButton";
 
 export default function CommitModal(
   { task, balance, onRequestClose, taskUpdated }:
@@ -20,7 +22,7 @@ export default function CommitModal(
   async function submit() {
     if (amount && !insufficientBeans && !loading) {
       setLoading(true);
-      const res = await Api.tasks.commit(task._id, amount);
+      const res = await Api.tasks.commit(task.id, amount);
       if (res.OK && res.data) {
         setLoading(false);
         taskUpdated(res.data);
@@ -42,11 +44,12 @@ export default function CommitModal(
   return (
     <Modal visible={true} animationType={"slide"} presentationStyle={"pageSheet"}>
       <BackContainer onBackPressed={onRequestClose} title={`Commit to ${task.description}`}>
-        <Text style={commonStyles.inputLabel}>Amount</Text>
+        <Label>Amount</Label>
+        <VBuffer height={4} />
         <TextInput style={commonStyles.textInput} onChangeText={onTextChanged} keyboardType={"numeric"} />
-        <VBuffer height={8} />
+        <VBuffer height={16} />
         { insufficientBeans && insufficientBeansText }
-        <Button title={"Send"} onPress={submit} disabled={insufficientBeans || loading} color={Colors.light.theme} />
+        <BeanButton title={"Send"} onPress={submit} disabled={insufficientBeans || loading} />
       </BackContainer>
     </Modal>
   )

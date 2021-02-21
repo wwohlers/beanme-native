@@ -1,6 +1,6 @@
 export default interface Group {
-  _id: string;
-  name: string;
+  id: string;
+  groupName: string;
   users: GroupUser[];
   scheduledTasks: ScheduledTask[];
   invites: string[];
@@ -8,13 +8,13 @@ export default interface Group {
 
 export interface GroupUser {
   userId: string;
-  beans: number;
+  numBeans: number;
 }
 
 export interface PopulatedGroupUser {
   userId: string;
   name: string;
-  beans: number;
+  numBeans: number;
 }
 
 export interface ScheduledTask {

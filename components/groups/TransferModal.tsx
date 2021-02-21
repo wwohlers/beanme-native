@@ -9,6 +9,8 @@ import pushToast from "../../utils/toast";
 import Colors from "../../constants/Colors";
 import {store} from "../../store";
 import {patchGroup} from "../../store/actions";
+import Label from "../reusable/fonts/Label";
+import BeanButton from "../reusable/BeanButton";
 
 export default function TransferModal(
   { user, balance, groupId, onRequestClose }:
@@ -44,11 +46,12 @@ export default function TransferModal(
   return (
     <Modal visible={true} animationType={"slide"} presentationStyle={"pageSheet"}>
       <BackContainer onBackPressed={onRequestClose} title={`Send Beans to ${user.name}`}>
-        <Text style={commonStyles.inputLabel}>Amount</Text>
-        <TextInput style={commonStyles.textInput} onChangeText={onTextChanged} keyboardType={"numeric"} />
-        <VBuffer height={8} />
+        <Label>Amount</Label>
+        <VBuffer height={4} />
+        <TextInput style={commonStyles.textInput} onChangeText={onTextChanged} keyboardType={"numeric"} placeholder={"14"} />
+        <VBuffer height={16} />
         { insufficientBeans && insufficientBeansText }
-        <Button title={"Send"} onPress={submit} disabled={insufficientBeans || loading} color={Colors.light.theme} />
+        <BeanButton title={"Send"} onPress={submit} disabled={insufficientBeans || loading} />
       </BackContainer>
     </Modal>
   )

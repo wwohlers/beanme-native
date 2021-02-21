@@ -7,20 +7,30 @@ import {store} from "../../store";
 import {setToken, setUser} from "../../store/actions";
 import pushToast from "../../utils/toast";
 import Colors from "../../constants/Colors";
-import {loadGroups} from "../../store/thunks";
+import {loadGroups, updateUser} from "../../store/thunks";
+import DMSans from "../reusable/fonts/DMSans";
+import Label from "../reusable/fonts/Label";
+import BeanButton from "../reusable/BeanButton";
+import {formatPhone} from "../../utils/format";
 
 export default function SignUp() {
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
   const [password, setPassword] = useState('');
   const [confPassword, setConfPassword] = useState('');
+  const [loading, setLoading] = useState(false);
+
+  function valid() {
+    return name && phone && password && confPassword === password;
+  }
 
   async function signUp() {
-    const res = await Api.users.signUp(name, phone, password);
+    setLoading(true);
+    const res = await Api.users.signUp(name, formatPhone(phone), password);
+    setLoading(false);
     if (res.OK && res.data) {
-      store.dispatch(setUser(res.data));
-      store.dispatch(setToken(res.data.token));
-      await loadGroups();
+      store.dispatch(setToken(res.data.access_token));
+      store.dispatch(setUser(res.data.user));
     } else {
       pushToast("error", "Error creating account");
     }
@@ -28,21 +38,30 @@ export default function SignUp() {
 
   return (
     <View>
-      <Text style={commonStyles.title}>Create an Account</Text>
-      <VBuffer height={8} />
-      <Text style={commonStyles.inputLabel}>Name</Text>
+      <DMSans fontSize={28}>Create an account</DMSans>
+
+      <VBuffer height={16} />
+      <Label>Name</Label>
+      <VBuffer height={4} />
+      <TextInput style={commonStyles.textInput} onChangeText={setName} />
+
+      <VBuffer height={16} />
+      <Label>Phone</Label>
+      <VBuffer height={4} />
       <TextInput style={commonStyles.textInput} onChangeText={setPhone} />
-      <VBuffer height={8} />
-      <Text style={commonStyles.inputLabel}>Phone</Text>
-      <TextInput style={commonStyles.textInput} onChangeText={setPhone} />
-      <VBuffer height={8} />
-      <Text style={commonStyles.inputLabel}>Password</Text>
+
+      <VBuffer height={16} />
+      <Label>Password</Label>
+      <VBuffer height={4} />
       <TextInput style={commonStyles.textInput} onChangeText={setPassword} secureTextEntry={true} />
-      <VBuffer height={8} />
-      <Text style={commonStyles.inputLabel}>Confirm Password</Text>
-      <TextInput style={commonStyles.textInput} onChangeText={setPassword} secureTextEntry={true} />
-      <VBuffer height={8} />
-      <Button title={"Create Account"} onPress={signUp} color={Colors.light.theme} />
+
+      <VBuffer height={16} />
+      <Label>Confirm Password</Label>
+      <VBuffer height={4} />
+      <TextInput style={commonStyles.textInput} onChangeText={setConfPassword} secureTextEntry={true} />
+
+      <VBuffer height={16} />
+      <BeanButton title={"Create Account"} onPress={signUp} disabled={!valid()} loading={loading} />
     </View>
   )
 }

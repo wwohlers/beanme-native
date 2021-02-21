@@ -9,6 +9,8 @@ import RelativeTimePicker from "../reusable/RelativeTimePicker";
 import Task from "../../utils/models/Task";
 import pushToast from "../../utils/toast";
 import GroupPicker from "../reusable/GroupPicker";
+import Label from "../reusable/fonts/Label";
+import BeanButton from "../reusable/BeanButton";
 
 export default function CreateTaskModal(
   { onRequestClose, onTaskCreated }:
@@ -38,7 +40,7 @@ export default function CreateTaskModal(
       const res = await Api.tasks.createTask(groupId, description, amount, completeBy);
       if (res.OK && res.data) {
         if (isScheduled) {
-          await Api.groups.scheduleTask(res.data._id, scheduleInterval);
+          await Api.groups.scheduleTask(groupId, res.data.id, scheduleInterval);
           if (!res.OK) {
             pushToast("error", "An error occurred scheduling your task");
           }
@@ -55,45 +57,52 @@ export default function CreateTaskModal(
   return (
     <Modal visible={true} animationType={"slide"} presentationStyle={"pageSheet"}>
       <BackContainer onBackPressed={onRequestClose} title={"Create a Task"}>
-        <Text style={commonStyles.inputLabel}>Group</Text>
+        <Label>Group</Label>
+        <VBuffer height={4} />
         <GroupPicker onGroupSelected={setGroupId} />
-        <VBuffer height={8} />
+        <VBuffer height={16} />
 
-        <Text style={commonStyles.inputLabel}>Description</Text>
-        <TextInput style={commonStyles.textInput} onChangeText={setDescription} />
-        <VBuffer height={8} />
+        <Label>Description</Label>
+        <VBuffer height={4} />
+        <TextInput style={commonStyles.textInput} onChangeText={setDescription} placeholder={"Dishes"} />
+        <VBuffer height={16} />
 
-        <Text style={commonStyles.inputLabel}>Reward</Text>
-        <TextInput style={commonStyles.textInput} onChangeText={rewardChanged} keyboardType={"numeric"} />
-        <VBuffer height={8} />
+        <Label>Reward (beans)</Label>
+        <VBuffer height={4} />
+        <TextInput
+          style={commonStyles.textInput}
+          placeholder={"8"}
+          onChangeText={rewardChanged}
+          keyboardType={"numeric"} />
+        <VBuffer height={16} />
 
-        <Text style={commonStyles.inputLabel}>Complete Within</Text>
+        <Label>Complete Within</Label>
+        <VBuffer height={4} />
         <RelativeTimePicker onChange={setRelativeDuration} />
-        <VBuffer height={8} />
+        <VBuffer height={16} />
 
-        <Text style={commonStyles.inputLabel}>Scheduled</Text>
-        <Switch
-          onValueChange={setIsScheduled}
-          value={isScheduled}
-          thumbColor={Colors.light.medium}
-          trackColor={{ false: Colors.light.borders, true: Colors.light.medium }}
-        />
-        <VBuffer height={8} />
+        <View style={{...commonStyles.flexRow, justifyContent: "space-between" }}>
+          <Label>Repeat</Label>
+          <Switch
+            onValueChange={setIsScheduled}
+            value={isScheduled}
+            thumbColor={Colors.light.medium}
+            trackColor={{ false: Colors.light.borders, true: Colors.light.medium }}
+          />
+        </View>
 
         {
           isScheduled && (
             <View>
-              <Text style={commonStyles.inputLabel}>Repeat Every</Text>
               <RelativeTimePicker onChange={setScheduleInterval} />
-              <VBuffer height={8} />
             </View>
           )
         }
 
-        <Button
+        <VBuffer height={16} />
+        <BeanButton
           title={"Create"}
           onPress={submit}
-          color={Colors.light.theme}
           disabled={!formValid} />
       </BackContainer>
     </Modal>

@@ -6,6 +6,9 @@ import {Api} from "../../utils/api";
 import BackContainer from "../layout/BackContainer";
 import VBuffer from "../layout/VBuffer";
 import pushToast from "../../utils/toast";
+import Label from "../reusable/fonts/Label";
+import BeanButton from "../reusable/BeanButton";
+import {formatPhone} from "../../utils/format";
 
 export default function InviteModal({ onCloseRequest, groupId }: { groupId: string, onCloseRequest: () => void }) {
   const [phone, setPhone] = useState('');
@@ -14,7 +17,7 @@ export default function InviteModal({ onCloseRequest, groupId }: { groupId: stri
   async function submit() {
     if (!phone) return;
     setLoading(true);
-    const res = await Api.groups.createInvite(phone, groupId);
+    const res = await Api.groups.createInvite(formatPhone(phone), groupId);
     if (res.OK) {
       setLoading(false);
       onCloseRequest();
@@ -26,10 +29,11 @@ export default function InviteModal({ onCloseRequest, groupId }: { groupId: stri
   return (
     <Modal visible={true} presentationStyle={"pageSheet"} animationType={"slide"}>
       <BackContainer onBackPressed={onCloseRequest} title={"Invite a Friend"}>
-        <Text style={commonStyles.inputLabel}>Phone</Text>
-        <TextInput style={commonStyles.textInput} onChangeText={setPhone} />
-        <VBuffer height={8} />
-        <Button title={"Invite"} onPress={submit} color={Colors.light.theme} disabled={loading} />
+        <Label>Phone</Label>
+        <VBuffer height={4} />
+        <TextInput style={commonStyles.textInput} onChangeText={setPhone} placeholder={"305-228-5497"} />
+        <VBuffer height={16} />
+        <BeanButton title={"Invite"} onPress={submit} disabled={loading} />
       </BackContainer>
     </Modal>
   )

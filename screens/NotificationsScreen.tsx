@@ -1,21 +1,35 @@
 import React, {useState} from 'react';
-import {RefreshControl, ScrollView, Text} from "react-native";
+import {
+  RefreshControl,
+  ScrollView,
+  Text,
+  TouchableOpacity,
+  TouchableWithoutFeedback
+} from "react-native";
 import {SafeAreaView} from "react-native-safe-area-context";
 import {updateUser} from "../store/thunks";
-import User, {Notification} from "../utils/models/User";
+import User from "../utils/models/User";
 import {useSelector} from "react-redux";
 import {StoreState} from "../store/state";
 import {commonStyles} from "../styles/common";
 import SingleNotification from "../components/notifications/SingleNotification";
 import {BottomTabNavigationProp} from "@react-navigation/bottom-tabs";
 import {BottomTabParamList} from "../utils/navigation";
+import Notification from "../utils/models/Notification";
+import DMSans from "../components/reusable/fonts/DMSans";
+import VBuffer from "../components/layout/VBuffer";
+import {MaterialCommunityIcons, MaterialIcons} from "@expo/vector-icons";
+import Colors from "../constants/Colors";
+import {View} from "../components/Themed";
+import {store} from "../store";
+import {signOut} from "../store/actions";
 
 export default function NotificationsScreen(
   { navigation }:
     { navigation: BottomTabNavigationProp<BottomTabParamList> }
 ) {
-  const user: User = useSelector<StoreState, User>(state => state.user as User);
-  const unviewedNotifications = user.notifications.filter(n => !n.viewed);
+  const notifications: Notification[] = useSelector<StoreState, Notification[]>(state => state.notifications as Notification[]);
+  const unviewedNotifications = notifications.filter(n => !n.viewed);
 
   const [loading, setLoading] = useState(false);
   /*
@@ -25,24 +39,30 @@ export default function NotificationsScreen(
    *  read/unread. Thus, we'll keep track of which notifications were originally unread when
    *  they first opened the screen.
    */
-  const [originallyUnviewed, setOriginallyUnviewed] = useState(unviewedNotifications.map(n => n._id));
+  const [originallyUnviewed, setOriginallyUnviewed] = useState(unviewedNotifications.map(n => n.id));
 
   async function reload() {
     setLoading(true);
     await updateUser();
-    setOriginallyUnviewed(unviewedNotifications.map(n => n._id));
+    setOriginallyUnviewed(unviewedNotifications.map(n => n.id));
     setLoading(false);
+  }
+
+  async function _signOut() {
+    store.dispatch(signOut());
   }
 
   const sortByDate = (b: Notification, a: Notification) => a.date - b.date;
   const sortedUnviewedNotifications = unviewedNotifications.sort(sortByDate);
-  const sortedViewedNotifications = user.notifications.filter(n => n.viewed).sort(sortByDate);
+  const sortedViewedNotifications = notifications.filter(n => n.viewed).sort(sortByDate);
   return (
     <SafeAreaView>
       <ScrollView
+        contentContainerStyle={{ padding: 8 }}
         style={commonStyles.container}
         refreshControl={<RefreshControl refreshing={loading} onRefresh={reload} />}>
-        <Text style={commonStyles.title}>Notifications ({ unviewedNotifications.length })</Text>
+        <DMSans fontSize={28}>Notifications ({ unviewedNotifications.length })</DMSans>
+        <VBuffer height={16} />
         {
           sortedUnviewedNotifications.map(n => <SingleNotification
             notification={n}
@@ -51,10 +71,26 @@ export default function NotificationsScreen(
         {
           sortedViewedNotifications.map(n => <SingleNotification notification={{
             ...n,
-            viewed: !originallyUnviewed.includes(n._id)
-          }} key={n._id} navigation={navigation} />)
+            viewed: !originallyUnviewed.includes(n.id)
+          }} key={n.id} navigation={navigation} />)
         }
+        <TouchableWithoutFeedback onPress={_signOut}>
+          <View style={styles.topRight}>
+            <MaterialCommunityIcons
+              name={"logout"} size={28}
+              color={Colors.light.text} />
+          </View>
+        </TouchableWithoutFeedback>
       </ScrollView>
     </SafeAreaView>
   )
+}
+
+const styles = {
+  topRight: {
+    position: "absolute",
+    top: 8,
+    right: 8,
+    backgroundColor: "#F0F0F0"
+  }
 }
